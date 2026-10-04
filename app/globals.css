@@ -1,0 +1,39 @@
+@import "tailwindcss";
+
+/* All site colors live here. Components use them through Tailwind classes
+   like bg-bg, text-muted or text-bp-ink (mapped in @theme below). */
+:root {
+  --bg: #101418;
+  --text: #eceae4;
+  --muted: #9ba1a8;
+  --accent: #7cc4ff;
+
+  /* Blueprint layer */
+  --bp-bg: #0a1e33;
+  --bp-ink: #a8d4ff;
+  --bp-value: #ffd27a;
+
+  color-scheme: dark;
+}
+
+/* Expose the variables above to Tailwind. `inline` makes the generated
+   classes reference var(--bg) etc. directly, so changing a variable
+   updates every class that uses it. */
+@theme inline {
+  --color-bg: var(--bg);
+  --color-text: var(--text);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-bp-bg: var(--bp-bg);
+  --color-bp-ink: var(--bp-ink);
+  --color-bp-value: var(--bp-value);
+
+  /* Font variables come from next/font in app/layout.tsx. */
+  --font-sans: var(--font-archivo);
+  --font-mono: var(--font-jetbrains-mono);
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+}
