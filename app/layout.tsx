@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Archivo, JetBrains_Mono } from "next/font/google";
+import { profile } from "@/content/profile";
 import "./globals.css";
 
 // Display + body font. Omitting `weight` loads the variable font, which is
@@ -17,8 +18,8 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Kashish Patel",
-  description: "Software developer in Toronto.",
+  title: profile.name,
+  description: profile.tagline,
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
