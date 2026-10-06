@@ -1,94 +1,131 @@
-// One spec line in the Blueprint layer: label is drawn in --bp-ink,
-// value in --bp-value.
-export type BlueprintDetail = {
+// One labelled paragraph on the back of a card, e.g. "What it does".
+export type DetailNote = {
   label: string;
-  value: string;
-  planned?: boolean; // true = designed but not built yet
+  text: string;
+};
+
+// Everything on the back of a flip card, shown in this order.
+export type ProjectDetails = {
+  notes: DetailNote[];
+  keyFeatures?: string[];
+  builtWith: string[];
 };
 
 type ProjectBase = {
+  id: "docsearch" | "connectx" | "waiting-room"; // picks the front illustration
   name: string;
   summary: string;
-  stack: string[];
-  blueprint: BlueprintDetail[];
+  details: ProjectDetails;
   repoUrl?: string;
   liveUrl?: string;
 };
 
-// `status` decides which other fields are allowed. A shipped project must
-// have a `shipped` date, and an in-progress one can't have one, so a
-// "shipped with no date" project is a type error instead of a bug on screen.
+// `status` decides which other fields are allowed. A complete project must
+// have a `completedLabel`, and an in-progress one can't have one, so a
+// "complete with no date" project is a type error instead of a bug on screen.
 export type Project =
-  | (ProjectBase & { status: "in-progress" })
-  | (ProjectBase & { status: "shipped"; shipped: string });
+  | (ProjectBase & { status: "in-progress"; startedOn?: string }) // "YYYY-MM-DD"
+  | (ProjectBase & { status: "complete"; completedLabel: string });
 
 const docSearch: Project = {
+  id: "docsearch",
   name: "DocSearch",
   status: "in-progress",
+  // TODO: add startedOn ("YYYY-MM-DD") to show the day counter
   summary:
     "A document Q&A platform: upload documents, ask questions in plain language, and get answers that cite the passage they came from.",
-  stack: [
-    "Next.js",
-    "TypeScript",
-    "Python",
-    "FastAPI",
-    "PostgreSQL",
-    "pgvector",
-    "OpenAI API",
-  ],
-  // Pipeline steps, in order.
-  blueprint: [
-    { label: "upload", value: "Next.js", planned: true },
-    { label: "chunk", value: "FastAPI", planned: true },
-    { label: "embed", value: "OpenAI API", planned: true },
-    { label: "store", value: "PostgreSQL + pgvector", planned: true },
-    { label: "retrieve", value: "similarity search", planned: true },
-    { label: "answer", value: "LLM with citations", planned: true },
-  ],
+  details: {
+    notes: [
+      {
+        label: "What it does",
+        text: "Turns a set of documents into something you can question in plain language, with a source for every answer.",
+      },
+      {
+        label: "How it works",
+        text: "Documents are split into passages and stored as vectors. A question finds the closest passages, and the answer is written from them.",
+      },
+      {
+        label: "Why citations",
+        text: "Showing the exact passage behind each answer makes it traceable and cuts down on unsupported responses.",
+      },
+    ],
+    keyFeatures: [
+      "Document upload",
+      "Plain-language questions",
+      "Answers with source citations",
+    ],
+    builtWith: [
+      "Next.js",
+      "TypeScript",
+      "Python",
+      "FastAPI",
+      "PostgreSQL with pgvector",
+      "OpenAI API",
+    ],
+  },
   // TODO: add repoUrl / liveUrl if they should be public
 };
 
 const connectX: Project = {
+  id: "connectx",
   name: "ConnectX",
-  status: "shipped",
-  shipped: "Apr 2025",
+  status: "complete",
+  completedLabel: "Shipped April 2025",
   summary:
     "A social media automation platform that runs keyword-based workflows for Instagram comments and DMs.",
-  stack: [
-    "Next.js",
-    "TypeScript",
-    "Node.js",
-    "Prisma",
-    "React Query",
-    "Instagram API",
-    "Stripe",
-  ],
-  blueprint: [
-    { label: "trigger", value: "comment matches a keyword" },
-    { label: "action", value: "send DM through the Instagram API" },
-    { label: "data", value: "Prisma models for workflows" },
-    { label: "ui", value: "React Query for fetching and caching" },
-    { label: "billing", value: "Stripe" },
-    { label: "api", value: "REST API in Node.js" },
-  ],
+  details: {
+    notes: [
+      {
+        label: "What it does",
+        text: "Replies to Instagram comments and DMs automatically whenever they match keywords the user sets up.",
+      },
+      {
+        label: "My role",
+        text: "Designed the REST APIs and workflow logic, built the database schema with Prisma, and tuned frontend data fetching, working in a small agile team.",
+      },
+    ],
+    keyFeatures: [
+      "Configurable keyword workflows",
+      "Automated comment and DM replies",
+      "Stripe payments",
+    ],
+    builtWith: [
+      "Next.js",
+      "TypeScript",
+      "Node.js",
+      "Prisma",
+      "React Query",
+      "Instagram API",
+      "Stripe",
+    ],
+  },
   // TODO: add repoUrl / liveUrl if they should be public
 };
 
 const waitingRoom: Project = {
+  id: "waiting-room",
   name: "Waiting room scheduler",
-  status: "shipped",
-  shipped: "Feb 2024",
+  status: "complete",
+  completedLabel: "Built February 2024",
   summary:
     "A Java system for clinic appointments that orders patients fairly with a priority queue and saves state between sessions.",
-  stack: ["Java", "Data structures"],
-  blueprint: [
-    {
-      label: "queue",
-      value: "PriorityQueue<Patient>, ordered by urgency then arrival time",
-    },
-    { label: "persistence", value: "file-based, saved between sessions" },
-    { label: "timing", value: "custom logic to simulate a real day" },
-  ],
+  details: {
+    notes: [
+      {
+        label: "What it does",
+        text: "Manages patient appointments and decides who is seen next: urgent cases first, then by arrival time.",
+      },
+      {
+        label: "How it works",
+        text: "A priority queue keeps scheduling fair, custom timing logic simulates a real clinic day, and file persistence saves state between sessions.",
+      },
+      {
+        label: "My role",
+        text: "Designed and implemented the whole system.",
+      },
+    ],
+    builtWith: ["Java", "priority queues", "file handling"],
+  },
   // TODO: add repoUrl if it should be public
 };
 

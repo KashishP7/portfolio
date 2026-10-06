@@ -1,20 +1,22 @@
 import type { Metadata } from "next";
-import { Archivo, JetBrains_Mono } from "next/font/google";
+import { Archivo, Newsreader } from "next/font/google";
 import { profile } from "@/content/profile";
 import "./globals.css";
 
-// Display + body font. Omitting `weight` loads the variable font, which is
-// required to also load the extra width ("wdth") axis.
+// Headings, names, labels and UI. Omitting `weight` loads the variable font,
+// which is required to also load the extra width ("wdth") axis.
 const archivo = Archivo({
   variable: "--font-archivo",
   subsets: ["latin"],
   axes: ["wdth"],
 });
 
-// Monospace font for the Blueprint layer.
-const jetbrainsMono = JetBrains_Mono({
-  variable: "--font-jetbrains-mono",
+// All reading text. The optical size ("opsz") axis lets the browser adjust
+// letter shapes to the text size automatically.
+const newsreader = Newsreader({
+  variable: "--font-newsreader",
   subsets: ["latin"],
+  axes: ["opsz"],
 });
 
 export const metadata: Metadata = {
@@ -26,7 +28,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${archivo.variable} ${jetbrainsMono.variable} h-full antialiased`}
+      className={`${archivo.variable} ${newsreader.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">{children}</body>
     </html>

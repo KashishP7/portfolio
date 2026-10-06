@@ -1,17 +1,26 @@
 @import "tailwindcss";
 
 /* All site colors live here. Components use them through Tailwind classes
-   like bg-bg, text-muted or text-bp-ink (mapped in @theme below). */
+   like bg-card, border-border or text-muted (mapped in @theme below). */
 :root {
-  --bg: #101418;
-  --text: #eceae4;
-  --muted: #9ba1a8;
-  --accent: #7cc4ff;
+  --bg: #0b0d10;
 
-  /* Blueprint layer */
-  --bp-bg: #0a1e33;
-  --bp-ink: #a8d4ff;
-  --bp-value: #ffd27a;
+  /* Cards */
+  --card: #12161b;
+  --card-hover: #161b21;
+  --inset: #0e1115;
+  --border: #1f252d;
+  --border-hover: #3a4450;
+
+  /* Text, from brightest to faintest */
+  --text: #eceae4;
+  --text-soft: #c2c6ca;
+  --muted: #8e959d;
+  --faint: #5c636b;
+
+  /* Highlights */
+  --accent: #7cc4ff;
+  --live: #4ade80;
 
   color-scheme: dark;
 }
@@ -21,16 +30,22 @@
    updates every class that uses it. */
 @theme inline {
   --color-bg: var(--bg);
+  --color-card: var(--card);
+  --color-card-hover: var(--card-hover);
+  --color-inset: var(--inset);
+  --color-border: var(--border);
+  --color-border-hover: var(--border-hover);
   --color-text: var(--text);
+  --color-text-soft: var(--text-soft);
   --color-muted: var(--muted);
+  --color-faint: var(--faint);
   --color-accent: var(--accent);
-  --color-bp-bg: var(--bp-bg);
-  --color-bp-ink: var(--bp-ink);
-  --color-bp-value: var(--bp-value);
+  --color-live: var(--live);
 
-  /* Font variables come from next/font in app/layout.tsx. */
+  /* Font variables come from next/font in app/layout.tsx.
+     Archivo is the default; reading text uses the font-serif class. */
   --font-sans: var(--font-archivo);
-  --font-mono: var(--font-jetbrains-mono);
+  --font-serif: var(--font-newsreader);
 }
 
 body {
