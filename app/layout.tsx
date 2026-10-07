@@ -23,7 +23,6 @@ export const metadata: Metadata = {
   title: profile.name,
   description: profile.tagline,
 };
-
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html

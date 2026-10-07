@@ -52,3 +52,10 @@ body {
   background: var(--bg);
   color: var(--text);
 }
+
+/* Nav links glide to their section, unless the visitor prefers less motion. */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}

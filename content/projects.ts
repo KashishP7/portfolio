@@ -11,9 +11,36 @@ export type ProjectDetails = {
   builtWith: string[];
 };
 
+// The small HTML/CSS illustration on the front of each card. `kind` picks
+// which illustration is drawn, and each kind has its own text fields.
+export type DocSearchIllustration = {
+  kind: "docsearch";
+  file: string;
+  question: string;
+  answer: string;
+  source: string;
+};
+
+export type ConnectXIllustration = {
+  kind: "connectx";
+  comment: string;
+  reply: string;
+  caption: string;
+};
+
+export type WaitingRoomIllustration = {
+  kind: "waiting-room";
+  queue: { label: string; position: string }[]; // first row is next
+};
+
+export type ProjectIllustration =
+  | DocSearchIllustration
+  | ConnectXIllustration
+  | WaitingRoomIllustration;
+
 type ProjectBase = {
-  id: "docsearch" | "connectx" | "waiting-room"; // picks the front illustration
   name: string;
+  illustration: ProjectIllustration;
   summary: string;
   details: ProjectDetails;
   repoUrl?: string;
@@ -27,11 +54,24 @@ export type Project =
   | (ProjectBase & { status: "in-progress"; startedOn?: string }) // "YYYY-MM-DD"
   | (ProjectBase & { status: "complete"; completedLabel: string });
 
+// Small labels used on the project cards.
+export const projectLabels = {
+  currentlyBuilding: "Currently building",
+  flip: "Flip for details", // text beside the folded corner
+  back: "Back",
+};
+
 const docSearch: Project = {
-  id: "docsearch",
   name: "DocSearch",
   status: "in-progress",
   // TODO: add startedOn ("YYYY-MM-DD") to show the day counter
+  illustration: {
+    kind: "docsearch",
+    file: "contract.pdf, 12 pages",
+    question: "What's the notice period in this contract?",
+    answer: "Either party can end the agreement with 30 days' written notice.",
+    source: "Source: contract.pdf, page 4",
+  },
   summary:
     "A document Q&A platform: upload documents, ask questions in plain language, and get answers that cite the passage they came from.",
   details: {
@@ -67,10 +107,15 @@ const docSearch: Project = {
 };
 
 const connectX: Project = {
-  id: "connectx",
   name: "ConnectX",
   status: "complete",
   completedLabel: "Shipped April 2025",
+  illustration: {
+    kind: "connectx",
+    comment: 'A follower comments "price?" on a post',
+    reply: "Automatic DM: here's our pricing page",
+    caption: "Keyword matched, reply sent in seconds",
+  },
   summary:
     "A social media automation platform that runs keyword-based workflows for Instagram comments and DMs.",
   details: {
@@ -103,10 +148,17 @@ const connectX: Project = {
 };
 
 const waitingRoom: Project = {
-  id: "waiting-room",
   name: "Waiting room scheduler",
   status: "complete",
   completedLabel: "Built February 2024",
+  illustration: {
+    kind: "waiting-room",
+    queue: [
+      { label: "Urgent", position: "Next" },
+      { label: "Standard, arrived 9:10", position: "2nd" },
+      { label: "Standard, arrived 9:25", position: "3rd" },
+    ],
+  },
   summary:
     "A Java system for clinic appointments that orders patients fairly with a priority queue and saves state between sessions.",
   details: {
