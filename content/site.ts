@@ -30,5 +30,4 @@ export const navItems: NavItem[] = [
 
 export const footer = {
   credit: "Kashish Patel, Toronto",
-  builtWith: "Built with Next.js",
 };

@@ -1,4 +1,4 @@
-import type { Metadata, Viewport } from "next";
+import type { Metadata } from "next";
 import { Archivo, Newsreader } from "next/font/google";
 import { profile } from "@/content/profile";
 import "./globals.css";
@@ -23,13 +23,6 @@ export const metadata: Metadata = {
   title: profile.name,
   description: profile.tagline,
 };
-
-// "cover" lets the page extend under the iPhone home indicator, which makes
-// env(safe-area-inset-bottom) report its real size (used by the bottom nav).
-export const viewport: Viewport = {
-  viewportFit: "cover",
-};
-
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html

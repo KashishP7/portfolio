@@ -28,7 +28,7 @@ export function Contact() {
             <Card
               href={link.href}
               external={link.kind !== "email"}
-              padded={false}
+              padding="none"
               className="relative px-6 py-8 sm:px-8"
             >
               <span

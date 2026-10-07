@@ -1,7 +1,15 @@
+type CardPadding = "large" | "compact" | "none";
+
+const paddingClasses: Record<CardPadding, string> = {
+  large: "px-5 py-7 sm:px-8 sm:py-10 lg:px-12 lg:py-12", // full content cards
+  compact: "p-4 sm:p-6 lg:p-8", // cards that hold a grid of tiles
+  none: "", // the card sets its own padding through className
+};
+
 type CardProps = {
   children: React.ReactNode;
   className?: string;
-  padded?: boolean; // large padding for full content cards (the default)
+  padding?: CardPadding;
   href?: string; // makes the whole card a link
   external?: boolean; // open the link in a new tab
 };
@@ -11,12 +19,11 @@ type CardProps = {
 export function Card({
   children,
   className = "",
-  padded = true,
+  padding = "large",
   href,
   external = false,
 }: CardProps) {
-  const padding = padded ? "px-6 py-8 sm:px-10 sm:py-12 lg:px-16 lg:py-14" : "";
-  const classes = `rounded-3xl border border-border bg-card ${padding} ${className}`;
+  const classes = `rounded-3xl border border-border bg-card ${paddingClasses[padding]} ${className}`;
 
   if (href) {
     return (

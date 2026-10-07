@@ -9,7 +9,7 @@ type ProjectCardProps = {
 
 export function ProjectCard({ project, featured = false }: ProjectCardProps) {
   return (
-    <Card className={`flex flex-col ${featured ? "md:col-span-2" : ""}`}>
+    <Card className={`relative flex flex-col ${featured ? "md:col-span-2" : ""}`}>
       <div
         className={
           featured
@@ -34,24 +34,41 @@ export function ProjectCard({ project, featured = false }: ProjectCardProps) {
         </div>
       </div>
 
-      {/* Does nothing yet. The flip to the card's back comes in M5.
-          mt-auto pushes it to the bottom, so side-by-side cards line up;
-          pt-8 keeps a minimum gap above it. */}
-      <div className="mt-auto flex justify-end pt-8">
-        <DetailsButton />
-      </div>
+      {/* Keeps the summary clear of the folded corner below it. */}
+      <div aria-hidden="true" className="h-8 shrink-0" />
+
+      <FlipCorner projectName={project.name} />
     </Card>
   );
 }
 
-function DetailsButton() {
+// The fold: the bottom-right half of the square is the page background (the
+// corner looks cut away), a thin line marks the crease, and the top-left
+// half is the folded-back flap.
+const foldBackground =
+  "linear-gradient(to top left, var(--bg) 49%, var(--border-hover) 49% 51%, var(--card-hover) 51%)";
+
+// Does nothing yet; the flip to the card's back comes in M5.
+function FlipCorner({ projectName }: { projectName: string }) {
   return (
     <button
       type="button"
-      className="flex items-center gap-2 rounded-full border border-border bg-inset px-4 py-2 text-sm font-medium text-text-soft transition-colors hover:border-border-hover hover:text-text focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+      // The label repeats the visible text and adds the project, so screen
+      // reader users can tell the three buttons apart.
+      aria-label={`${projectLabels.flip}: ${projectName}`}
+      // -right-px/-bottom-px: sits over the card's border so the cut-away
+      // corner hides it. pr-18 leaves room for the fold beside the text.
+      className="group absolute -right-px -bottom-px rounded-br-3xl py-4 pr-18 pl-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
     >
-      {projectLabels.details}
-      <FoldedCorner />
+      <span className="text-xs font-medium text-muted transition-colors group-hover:text-text">
+        {projectLabels.flip}
+      </span>
+      {/* Grows from 56px to 64px on hover, like the page lifting a little. */}
+      <span
+        aria-hidden="true"
+        className="absolute right-0 bottom-0 size-14 rounded-tl-xl transition-[width,height] duration-200 group-hover:size-16"
+        style={{ background: foldBackground }}
+      />
     </button>
   );
 }
@@ -71,15 +88,4 @@ function ProjectStatus({ project }: { project: Project }) {
   }
 
   return <p className="text-sm text-muted">{project.completedLabel}</p>;
-}
-
-// A tiny page with its top-right corner folded down: a square whose corner
-// is cut off by a diagonal gradient, plus a small triangle for the fold.
-function FoldedCorner() {
-  return (
-    <span aria-hidden="true" className="relative size-3.5">
-      <span className="absolute inset-0 rounded-[2px] bg-[linear-gradient(225deg,transparent_32%,currentColor_32%)] opacity-60" />
-      <span className="absolute top-0 right-0 size-[45%] rounded-bl-[2px] bg-[linear-gradient(225deg,transparent_50%,currentColor_50%)]" />
-    </span>
-  );
 }

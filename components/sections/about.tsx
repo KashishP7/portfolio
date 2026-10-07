@@ -6,17 +6,21 @@ export function About() {
   return (
     <Section id="about">
       <Card>
-        <p className="max-w-4xl text-2xl font-semibold leading-snug tracking-tight sm:text-3xl lg:text-4xl">
-          {profile.aboutStatement}
-        </p>
+        {/* Stacked until 1024px; then the statement takes the left 5/12 and
+            the paragraphs the right 7/12. */}
+        <div className="grid gap-6 sm:gap-8 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-16">
+          <p className="text-[1.375rem] font-semibold leading-snug tracking-tight sm:text-[1.625rem] lg:text-[1.875rem]">
+            {profile.aboutStatement}
+          </p>
 
-        <div className="mt-8 max-w-[68ch] space-y-5 font-serif text-lg leading-relaxed text-text-soft sm:mt-10 sm:text-xl">
-          {profile.aboutParagraphs.map((paragraph) => (
-            <p key={paragraph}>{paragraph}</p>
-          ))}
+          <div className="max-w-[68ch] space-y-4 font-serif text-[1.0625rem] leading-relaxed text-text-soft sm:text-lg">
+            {profile.aboutParagraphs.map((paragraph) => (
+              <p key={paragraph}>{paragraph}</p>
+            ))}
+          </div>
         </div>
 
-        <div className="mt-10 border-t border-border pt-8 sm:mt-12">
+        <div className="mt-8 border-t border-border pt-6 sm:mt-10 sm:pt-8">
           <h3 className="text-xs font-semibold uppercase tracking-widest text-faint">
             {educationLabel}
           </h3>
