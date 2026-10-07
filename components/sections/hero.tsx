@@ -6,8 +6,13 @@ export function Hero() {
   const [firstName, lastName] = profile.name.split(" ");
 
   return (
-    // pb-28 keeps the bottom nav from covering the intro on short screens.
-    <section id="home" className="flex min-h-svh flex-col pt-6 pb-28 sm:pt-8">
+    // Phones: as tall as the content. From 640px up: fills the screen, and the
+    // bottom padding equals the space the nav takes up, so the name block is
+    // centered between the top line and the top of the nav.
+    <section
+      id="home"
+      className="flex flex-col pt-6 sm:min-h-svh sm:pt-8 sm:pb-(--nav-space)"
+    >
       <Container className="flex flex-1 flex-col">
         <div className="flex flex-col gap-2 text-sm text-muted sm:flex-row sm:items-center sm:justify-between">
           <p className="flex items-center gap-3">
@@ -21,7 +26,7 @@ export function Hero() {
           </p>
         </div>
 
-        <div className="flex flex-1 flex-col items-center justify-center py-12 text-center">
+        <div className="flex flex-col items-center pt-16 pb-4 text-center sm:flex-1 sm:justify-center sm:py-10">
           <h1 className="text-[clamp(3.5rem,14vw,10.5rem)] leading-[0.9] font-extrabold font-stretch-semi-expanded tracking-tight">
             <span className="block">{firstName}</span>{" "}
             <span className="block">{lastName}</span>

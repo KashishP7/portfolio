@@ -13,7 +13,7 @@ export type ProjectDetails = {
 
 // The small HTML/CSS illustration on the front of each card. `kind` picks
 // which illustration is drawn, and each kind has its own text fields.
-type DocSearchIllustration = {
+export type DocSearchIllustration = {
   kind: "docsearch";
   file: string;
   question: string;
@@ -21,14 +21,14 @@ type DocSearchIllustration = {
   source: string;
 };
 
-type ConnectXIllustration = {
+export type ConnectXIllustration = {
   kind: "connectx";
   comment: string;
   reply: string;
   caption: string;
 };
 
-type WaitingRoomIllustration = {
+export type WaitingRoomIllustration = {
   kind: "waiting-room";
   queue: { label: string; position: string }[]; // first row is next
 };

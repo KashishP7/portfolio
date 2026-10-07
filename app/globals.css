@@ -48,9 +48,27 @@
   --font-serif: var(--font-newsreader);
 }
 
+/* Bottom nav sizing, shared by the nav and everything that must stay clear
+   of it. --nav-gap is the space below the pill, plus the iPhone home
+   indicator area (needs viewportFit: "cover" in app/layout.tsx). */
+:root {
+  --nav-gap: calc(1rem + env(safe-area-inset-bottom));
+  --nav-height: 3rem;
+  --nav-space: calc(var(--nav-gap) + var(--nav-height)); /* screen bottom to top of the pill */
+}
+
+@media (width >= 40rem) {
+  :root {
+    --nav-gap: calc(1.5rem + env(safe-area-inset-bottom));
+    --nav-height: 3.25rem;
+  }
+}
+
 body {
   background: var(--bg);
   color: var(--text);
+  /* The end of the page always scrolls clear of the nav, with a gap above it. */
+  padding-bottom: calc(var(--nav-space) + 1.5rem);
 }
 
 /* Nav links glide to their section, unless the visitor prefers less motion. */
