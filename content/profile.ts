@@ -1,6 +1,7 @@
 export type Link = {
   kind: "email" | "linkedin" | "github"; // lets a component choose the right icon
   label: string; // visible text, e.g. "GitHub"
+  handle: string; // short text shown under the label, e.g. "KashishP7"
   href: string; // mailto: or https://
 };
 
@@ -39,24 +40,31 @@ export const profile: Profile = {
     "I'm especially drawn to SaaS, the tools people rely on every day to get their work done. Long term, I want to build a product of my own.",
   ],
   email: "kkashishpatel@gmail.com",
+  // In display order (the social cards in the Contact section).
   links: [
     {
-      kind: "email",
-      label: "Email",
-      href: "mailto:kkashishpatel@gmail.com",
+      kind: "github",
+      label: "GitHub",
+      handle: "KashishP7",
+      href: "https://github.com/KashishP7",
     },
     {
       kind: "linkedin",
       label: "LinkedIn",
+      handle: "Kashish Patel",
       href: "https://www.linkedin.com/in/kashish-patel-962b58267",
     },
     {
-      kind: "github",
-      label: "GitHub",
-      href: "https://github.com/KashishP7",
+      kind: "email",
+      label: "Email",
+      handle: "kkashishpatel@gmail.com",
+      href: "mailto:kkashishpatel@gmail.com",
     },
   ],
 };
+
+// Small heading above the education entry in the About card.
+export const educationLabel = "Education";
 
 export const education: Education[] = [
   {
