@@ -3,29 +3,28 @@
 import { useEffect } from "react";
 
 const FINE_POINTER = "(hover: hover) and (pointer: fine)";
-const GLOW_RADIUS = 220; // px, matches the mask circle in hero-dots.tsx
+const GLOW_RADIUS = 220; // px, the mouse mask circle in hero-dots.tsx
 
-// Follows the mouse for the hero dot grid. Renders nothing and never sets
-// React state: it writes CSS variables, at most once per animation frame,
-// so moving the mouse doesn't re-render React.
-//   --hx / --hy  cursor position inside the hero (on the dot grid layer)
+// Lights up the hero dots under the mouse (or, on touch screens, under the
+// finger). Renders nothing and never sets React state: it writes CSS
+// variables, at most once per animation frame.
+//   --hx / --hy  position inside the hero (on the dot grid layer)
 //
-// Only pointer movement triggers an update, never scrolling. Rewriting the
-// variables while scrolling repainted the masked dot layer under the
-// pointer, which made Safari flash its default cursor. While you scroll
-// without moving the mouse, the lit dots simply stay where they were and
+// Mouse: only pointer movement triggers an update, never scrolling.
+// Rewriting the variables while scrolling repainted the masked dot layer
+// under the pointer, which made Safari flash its default cursor. While you
+// scroll without moving the mouse, the lit dots stay where they were and
 // catch up on the next move.
+// Touch: there's no cursor, so updates also run while the finger scrolls.
 export function PointerTracker() {
   useEffect(() => {
-    // Touch screens get no dots, so there's nothing to track.
-    if (!window.matchMedia(FINE_POINTER).matches) return;
-
-    const root = document.documentElement;
     const found = document.querySelector<HTMLElement>("[data-hero-dots]");
     if (!found) return;
     // A new const with a non-null type, so the functions below (which
     // TypeScript treats as callable before the check) know it exists.
     const dots: HTMLElement = found;
+    const root = document.documentElement;
+    const hero = dots.parentElement ?? dots;
 
     let x = 0;
     let y = 0;
@@ -53,21 +52,53 @@ export function PointerTracker() {
       dots.style.setProperty("--hy", `${localY}px`);
     }
 
-    function handleMove(event: PointerEvent) {
-      if (event.pointerType === "touch") return;
-      x = event.clientX;
-      y = event.clientY;
-      root.dataset.pointer = ""; // reveals the bright dots after the first move
+    function scheduleUpdate() {
       // However many events arrive, only one update runs per frame.
       if (!frame) frame = requestAnimationFrame(update);
     }
 
-    window.addEventListener("pointermove", handleMove, { passive: true });
+    if (window.matchMedia(FINE_POINTER).matches) {
+      function handleMove(event: PointerEvent) {
+        if (event.pointerType === "touch") return;
+        x = event.clientX;
+        y = event.clientY;
+        root.dataset.pointer = ""; // reveals the bright dots after the first move
+        scheduleUpdate();
+      }
 
+      window.addEventListener("pointermove", handleMove, { passive: true });
+      return () => {
+        window.removeEventListener("pointermove", handleMove);
+        cancelAnimationFrame(frame);
+        delete root.dataset.pointer;
+      };
+    }
+
+    // Touch: bright dots follow the finger while it's down on the hero,
+    // and fade out when it lifts.
+    function handleTouch(event: TouchEvent) {
+      const touch = event.touches[0];
+      if (!touch) return;
+      x = touch.clientX;
+      y = touch.clientY;
+      root.dataset.touching = "";
+      scheduleUpdate();
+    }
+    function handleTouchEnd() {
+      delete root.dataset.touching;
+    }
+
+    hero.addEventListener("touchstart", handleTouch, { passive: true });
+    hero.addEventListener("touchmove", handleTouch, { passive: true });
+    hero.addEventListener("touchend", handleTouchEnd);
+    hero.addEventListener("touchcancel", handleTouchEnd);
     return () => {
-      window.removeEventListener("pointermove", handleMove);
+      hero.removeEventListener("touchstart", handleTouch);
+      hero.removeEventListener("touchmove", handleTouch);
+      hero.removeEventListener("touchend", handleTouchEnd);
+      hero.removeEventListener("touchcancel", handleTouchEnd);
       cancelAnimationFrame(frame);
-      delete root.dataset.pointer;
+      delete root.dataset.touching;
     };
   }, []);
 

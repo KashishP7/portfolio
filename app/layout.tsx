@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Archivo, Newsreader } from "next/font/google";
 import { profile } from "@/content/profile";
 import "./globals.css";
@@ -22,6 +22,13 @@ const newsreader = Newsreader({
 export const metadata: Metadata = {
   title: profile.name,
   description: profile.tagline,
+};
+
+// "cover" makes env(safe-area-inset-*) report the iPhone's real insets, so
+// the floating nav can stay above the home indicator. body adds side
+// padding for the notch in landscape (globals.css).
+export const viewport: Viewport = {
+  viewportFit: "cover",
 };
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (

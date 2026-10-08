@@ -18,6 +18,7 @@ export function Section({ id, children }: SectionProps) {
         <h2
           id={headingId}
           data-dim
+          data-reveal
           className="mb-6 text-3xl font-bold font-stretch-semi-expanded tracking-tight sm:mb-8 sm:text-[2.75rem] sm:leading-tight"
         >
           {sectionHeadings[id]}

@@ -15,7 +15,7 @@ export type Education = {
 
 export type Profile = {
   name: string;
-  role: string;
+  roles: string[]; // cycled in the hero; the first is the stable label for screen readers
   location: string;
   availability: string;
   tagline: string; // the one-line intro in the hero
@@ -27,7 +27,12 @@ export type Profile = {
 
 export const profile: Profile = {
   name: "Kashish Patel",
-  role: "Full-Stack Software Developer",
+  roles: [
+    "Full-Stack Developer",
+    "Web Developer",
+    "Software Developer",
+    "Product Builder",
+  ],
   location: "Toronto, Canada",
   availability: "Open to software engineering roles",
   tagline:
