@@ -21,7 +21,7 @@ export function About() {
         </div>
 
         <div className="mt-8 border-t border-border pt-6 sm:mt-10 sm:pt-8">
-          <h3 className="text-xs font-semibold uppercase tracking-widest text-faint">
+          <h3 className="text-xs font-semibold text-faint">
             {educationLabel}
           </h3>
           {education.map((entry) => (

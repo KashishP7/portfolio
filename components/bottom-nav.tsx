@@ -12,7 +12,8 @@ export function BottomNav() {
           <li key={item.target} className="grow">
             <a
               href={`#${item.target}`}
-              className="block rounded-xl border border-transparent px-2 py-2 text-center text-xs font-medium text-muted transition-colors hover:border-border-hover hover:bg-card-hover hover:text-text focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent sm:px-4 sm:text-sm"
+              data-spotlight
+              className="block rounded-xl px-2 py-2 text-center text-xs font-medium text-muted hover:text-text focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent sm:px-4 sm:text-sm"
             >
               {item.label}
             </a>

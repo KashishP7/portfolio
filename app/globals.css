@@ -22,6 +22,13 @@
   --accent: #7cc4ff;
   --live: #4ade80;
 
+  /* Interaction effects */
+  --nav-hover: #232a33; /* nav link background on hover */
+  --dot: rgba(236, 234, 228, 0.1); /* dot grid in the hero, faint */
+  --dot-page: rgba(236, 234, 228, 0.05); /* dot grid below the hero */
+  --dot-lit: rgba(236, 234, 228, 0.55); /* hero dots near the cursor */
+  --dot-spacing: 28px; /* shared by the hero and page grids so they line up */
+
   color-scheme: dark;
 }
 
@@ -51,6 +58,106 @@
 body {
   background: var(--bg);
   color: var(--text);
+}
+
+/* ------------------------------------------------------------------------
+   Interactions (mouse and trackpad only; nothing here runs on touch screens)
+
+   Spotlight. Two marker attributes:
+     data-spotlight  a card: lights up when active, dims when another is
+     data-dim        other content (headings, hero, footer): only dims
+   "Active" = hovered, or holding keyboard focus (:focus-visible ignores
+   mouse clicks, so clicking a button doesn't leave the page dimmed).
+   Dimming is applied only to these marked pieces, never to their parents,
+   because opacity would also dim the active card inside them.
+   ------------------------------------------------------------------------ */
+@media (hover: hover) and (pointer: fine) {
+  /* The one shared timing for everything that dims or lights up. */
+  [data-spotlight],
+  [data-dim],
+  [data-tile] {
+    transition-property: opacity, background-color, border-color;
+    transition-duration: 250ms;
+    transition-timing-function: ease;
+    /* Going back to normal waits 60ms. Crossing the gap between two cards
+       is quicker than that, so the page never flashes back to full
+       brightness in between. Dimming and lighting up start at once (0s). */
+    transition-delay: 60ms;
+  }
+
+  [data-spotlight]:is(:hover, :focus-visible, :has(:focus-visible)) {
+    background-color: var(--card-hover);
+    border-color: var(--border-hover);
+    transition-delay: 0s;
+  }
+
+  /* Nav links: a soft background only, no border. */
+  nav [data-spotlight]:is(:hover, :focus-visible) {
+    background-color: var(--nav-hover);
+  }
+
+  /* While any card is active, everything else drops to 30%. [inert] *
+     skips the hidden side of a flip card, which keeps its own opacity.
+     Note: :has() can't be nested inside :has(), so "focus inside a card"
+     is written with a space here: [data-spotlight] :focus-visible. */
+  body:has([data-spotlight]:hover, [data-spotlight]:focus-visible, [data-spotlight] :focus-visible)
+    :is([data-spotlight], [data-dim]):not(:hover, :focus-visible, :has(:focus-visible), [inert] *) {
+    opacity: 0.3;
+    transition-delay: 0s;
+  }
+
+  /* Toolkit: hovering one tile dims its neighbours to 35%. */
+  [data-spotlight]:has([data-tile]:hover) [data-tile]:not(:hover) {
+    opacity: 0.35;
+    transition-delay: 0s;
+  }
+
+  [data-tile]:hover {
+    border-color: var(--border-hover);
+    transition-delay: 0s;
+  }
+}
+
+/* Reduced motion: same effects, but they switch instantly instead of
+   fading. The 60ms wait stays, so gaps still don't flash. */
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: reduce) {
+  [data-spotlight],
+  [data-dim],
+  [data-tile] {
+    transition-duration: 0s;
+  }
+}
+
+/* Dot grid (mouse and trackpad devices only, like the other effects).
+   The page grid is the body background, so it starts at the top-left
+   corner, the same point as the hero's grid, and the dots line up. The
+   hero has a solid background that covers the page grid and draws its
+   own, stronger dots (components/effects/hero-dots.tsx). Cards have solid
+   backgrounds, so the grid only shows in the gaps between them. */
+.hero-dots {
+  display: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .hero-dots {
+    display: block;
+  }
+
+  body {
+    background-image: radial-gradient(circle, var(--dot-page) 1px, transparent 1px);
+    background-size: var(--dot-spacing) var(--dot-spacing);
+  }
+}
+
+/* The bright dots near the cursor stay hidden until the first mouse move
+   (PointerTracker then sets data-pointer on <html>), then fade in once. */
+.hero-dots-lit {
+  opacity: 0;
+  transition: opacity 400ms ease;
+}
+
+html[data-pointer] .hero-dots-lit {
+  opacity: 1;
 }
 
 /* Nav links glide to their section, unless the visitor prefers less motion. */

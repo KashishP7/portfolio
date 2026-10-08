@@ -10,6 +10,7 @@ export function Toolkit() {
           {tools.map((tool) => (
             <li
               key={tool.label}
+              data-tile
               // max-sm:odd:last:col-span-2: in the 2-column phone grid, a last
               // tile that is alone on its row spans both columns.
               className="flex h-13 items-center justify-center rounded-xl border border-border bg-inset px-3 text-center text-sm font-medium max-sm:odd:last:col-span-2 sm:h-15 sm:text-base"

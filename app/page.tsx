@@ -1,3 +1,4 @@
+import { PointerTracker } from "@/components/effects/pointer-tracker";
 import { About } from "@/components/sections/about";
 import { Contact } from "@/components/sections/contact";
 import { Experience } from "@/components/sections/experience";
@@ -18,6 +19,7 @@ export default function Home() {
         <Contact />
       </main>
       <Footer />
+      <PointerTracker />
     </>
   );
 }
