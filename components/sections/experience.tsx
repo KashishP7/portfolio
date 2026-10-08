@@ -13,6 +13,7 @@ export function Experience() {
           <li key={job.company} className="border-t border-border py-2 last:border-b">
             <div
               data-spotlight
+              data-reveal
               className="-mx-3 grid gap-6 rounded-2xl border border-transparent px-3 py-6 sm:-mx-5 sm:px-5 sm:py-8 md:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] md:gap-12"
             >
               <div>

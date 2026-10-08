@@ -10,21 +10,23 @@ const spacing = "var(--dot-spacing) var(--dot-spacing)";
 // two grids meet with no visible edge.
 const fadeToPage = "linear-gradient(to bottom, black 65%, rgb(0 0 0 / 0.5) 100%)";
 
-// Shows the bright dots only within 220px of the cursor, fading out to
-// the edge. --hx/--hy come from PointerTracker; the -999px defaults keep
-// the circle off-screen until the mouse moves.
-const nearCursor =
-  "radial-gradient(circle 220px at var(--hx, -999px) var(--hy, -999px), black, transparent)";
+// Shows the bright dots only within --hr (220px for a mouse, smaller for a
+// finger, set in globals.css) of the pointer, fading out to the edge.
+// --hx/--hy come from PointerTracker; the -999px defaults keep the circle
+// off-screen until then.
+const nearPointer =
+  "radial-gradient(circle var(--hr, 220px) at var(--hx, -999px) var(--hy, -999px), black, transparent)";
 
-// Dot grid behind the hero: faint everywhere, brighter near the cursor.
-// Hidden on touch screens (see .hero-dots in globals.css). Masks are set
-// in both spellings so Safari gets them too.
+// Dot grid behind the hero: faint everywhere, brighter near the pointer.
+// Fades in after the name and role (hero entrance). Masks are set in both
+// spellings so Safari gets them too.
 export function HeroDots() {
   return (
     <div
       aria-hidden="true"
       data-hero-dots
-      className="hero-dots pointer-events-none absolute inset-0 -z-10"
+      className="hero-dots hero-fade pointer-events-none absolute inset-0 -z-10"
+      style={{ animationDelay: "1200ms" }}
     >
       <div
         className="absolute inset-0"
@@ -40,8 +42,8 @@ export function HeroDots() {
         style={{
           backgroundImage: dotPattern("var(--dot-lit)", "1.2px"),
           backgroundSize: spacing,
-          maskImage: nearCursor,
-          WebkitMaskImage: nearCursor,
+          maskImage: nearPointer,
+          WebkitMaskImage: nearPointer,
         }}
       />
     </div>

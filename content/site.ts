@@ -23,10 +23,27 @@ export type NavItem = {
 export const navItems: NavItem[] = [
   { label: "Home", target: "home" },
   { label: "About", target: "about" },
-  { label: "Projects", target: "projects" },
   { label: "Experience", target: "experience" },
+  { label: "Toolkit", target: "toolkit" },
+  { label: "Projects", target: "projects" },
   { label: "Contact", target: "contact" },
 ];
+
+// The sections below the hero, in page order (app/page.tsx follows this).
+// The floating nav shows one dot per section.
+export const sectionOrder: Exclude<SectionId, "home">[] = [
+  "about",
+  "experience",
+  "toolkit",
+  "projects",
+  "contact",
+];
+
+// The small pill that appears once the hero's nav has scrolled away.
+export const floatingNav = {
+  label: "Sections", // names the <nav> for screen readers
+  hint: "show all sections", // added to the button's label after the section name
+};
 
 // First Tab stop on the page, hidden until focused. Jumps past the nav.
 export const skipLink = {

@@ -15,7 +15,8 @@ type CardProps = {
 };
 
 // Every card on the site uses this. data-spotlight opts it into the
-// spotlight effect (hover/focus styles are in globals.css).
+// spotlight effect and data-reveal into the scroll reveal (styles in
+// globals.css).
 export function Card({
   children,
   className = "",
@@ -33,6 +34,7 @@ export function Card({
         // noopener noreferrer: the new tab gets no access back to this page.
         rel={external ? "noopener noreferrer" : undefined}
         data-spotlight
+        data-reveal
         className={`${classes} block focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent`}
       >
         {children}
@@ -41,7 +43,7 @@ export function Card({
   }
 
   return (
-    <div data-spotlight className={classes}>
+    <div data-spotlight data-reveal className={classes}>
       {children}
     </div>
   );

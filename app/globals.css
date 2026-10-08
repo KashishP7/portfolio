@@ -58,6 +58,10 @@
 body {
   background: var(--bg);
   color: var(--text);
+  /* Keeps content clear of the notch in landscape (needs viewportFit:
+     "cover" in app/layout.tsx). 0 everywhere else. */
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
 }
 
 /* ------------------------------------------------------------------------
@@ -128,36 +132,132 @@ body {
   }
 }
 
-/* Dot grid (mouse and trackpad devices only, like the other effects).
-   The page grid is the body background, so it starts at the top-left
-   corner, the same point as the hero's grid, and the dots line up. The
-   hero has a solid background that covers the page grid and draws its
-   own, stronger dots (components/effects/hero-dots.tsx). Cards have solid
-   backgrounds, so the grid only shows in the gaps between them. */
-.hero-dots {
-  display: none;
+/* Dot grid (all devices). The page grid is the body background, so it
+   starts at the top-left corner, the same point as the hero's grid, and
+   the dots line up. The hero has a solid background that covers the page
+   grid and draws its own, stronger dots (components/effects/hero-dots.tsx).
+   Cards have solid backgrounds, so the grid only shows in the gaps. */
+body {
+  background-image: radial-gradient(circle, var(--dot-page) 1px, transparent 1px);
+  background-size: var(--dot-spacing) var(--dot-spacing);
 }
 
-@media (hover: hover) and (pointer: fine) {
-  .hero-dots {
-    display: block;
-  }
-
-  body {
-    background-image: radial-gradient(circle, var(--dot-page) 1px, transparent 1px);
-    background-size: var(--dot-spacing) var(--dot-spacing);
-  }
-}
-
-/* The bright dots near the cursor stay hidden until the first mouse move
-   (PointerTracker then sets data-pointer on <html>), then fade in once. */
+/* The bright dots stay hidden until the first mouse move (PointerTracker
+   sets data-pointer on <html>), or on touch screens while a finger is on
+   the hero (data-touching). They fade in and out. */
 .hero-dots-lit {
   opacity: 0;
   transition: opacity 400ms ease;
 }
 
-html[data-pointer] .hero-dots-lit {
+html[data-pointer] .hero-dots-lit,
+html[data-touching] .hero-dots-lit {
   opacity: 1;
+}
+
+/* ------------------------------------------------------------------------
+   Touch screens: no hover, so the spotlight follows scrolling instead.
+   ScrollSpotlight marks the card crossing the middle of the screen with
+   data-active; the other cards dim to 60%. Nav links aren't included.
+   ------------------------------------------------------------------------ */
+@media (hover: none), (pointer: coarse) {
+  [data-spotlight] {
+    transition: opacity 300ms ease, background-color 300ms ease, border-color 300ms ease;
+  }
+
+  html[data-scroll-spotlight] main [data-spotlight]:not([data-active], nav *, [inert] *) {
+    opacity: 0.6;
+  }
+
+  main [data-spotlight][data-active]:not(nav *) {
+    background-color: var(--card-hover);
+    border-color: var(--border-hover);
+  }
+
+  /* A smaller glow circle under a finger than under a mouse. */
+  [data-hero-dots] {
+    --hr: 120px;
+  }
+}
+
+/* ------------------------------------------------------------------------
+   Hero entrance (runs once on load). Name letters fade in from a blur one
+   after another (delays are set per letter in hero.tsx), the role decodes
+   (RoleCycler), then .hero-fade items fade in after their delay.
+   ------------------------------------------------------------------------ */
+@keyframes hero-letter {
+  from {
+    opacity: 0;
+    filter: blur(8px);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes appear {
+  to {
+    opacity: 1;
+  }
+}
+
+.hero-letter {
+  display: inline-block; /* a filter animates reliably only on boxes */
+  animation: hero-letter 500ms cubic-bezier(0.2, 0.7, 0.2, 1) backwards;
+}
+
+.hero-fade {
+  animation: fade-in 700ms ease backwards;
+}
+
+/* The role stays invisible until RoleCycler starts (it sets
+   data-decoding). If JavaScript never runs, it appears after 2.5s. */
+.decode:not([data-decoding]) {
+  opacity: 0;
+  animation: appear 1ms 2.5s forwards;
+}
+
+/* ------------------------------------------------------------------------
+   Scroll reveals. ScrollReveal sets data-reveal on <html> once it's ready;
+   until an element is revealed it's hidden, then it fades in and rises
+   8px, once. "backwards" only holds the start frame during the delay, so
+   afterwards the spotlight's own opacity rules apply as normal.
+   ------------------------------------------------------------------------ */
+@keyframes reveal {
+  from {
+    opacity: 0;
+    translate: 0 8px;
+  }
+}
+
+html[data-reveal] [data-reveal]:not([data-revealed]) {
+  opacity: 0;
+}
+
+[data-revealed="animate"] {
+  animation: reveal 450ms ease-out backwards;
+}
+
+/* Reduced motion: no entrance, no reveals, no fades; everything shows at
+   once. (ScrollReveal and RoleCycler also skip their work.) */
+@media (prefers-reduced-motion: reduce) {
+  .hero-letter,
+  .hero-fade,
+  [data-revealed="animate"] {
+    animation: none;
+  }
+
+  .decode:not([data-decoding]) {
+    opacity: 1;
+    animation: none;
+  }
+
+  [data-spotlight] {
+    transition-duration: 0s;
+  }
 }
 
 /* Custom cursor (mouse and trackpad only). Native CSS cursors, no JS.
