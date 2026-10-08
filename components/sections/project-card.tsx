@@ -48,6 +48,18 @@ function ProjectFront({ project, featured }: Required<ProjectCardProps>) {
           <p className="mt-3 font-serif text-lg leading-relaxed text-text-soft">
             {project.summary}
           </p>
+          {project.tags && (
+            <ul className="mt-4 flex flex-wrap gap-2">
+              {project.tags.map((tag) => (
+                <li
+                  key={tag}
+                  className="flex h-7 items-center rounded-lg border border-(--tag-border) px-2.5 text-[13px] text-muted"
+                >
+                  {tag}
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       </div>
 
@@ -140,12 +152,12 @@ function ProjectStatus({ project }: { project: Project }) {
     // TODO: day counter once `startedOn` is set (needs a client component,
     // since a pre-rendered page would freeze the count at build time).
     return (
-      <p className="flex items-center gap-2 text-sm font-medium text-text-soft">
+      <p className="small-label flex items-center gap-2">
         <span className="size-2 rounded-full bg-live" aria-hidden="true" />
         {projectLabels.currentlyBuilding}
       </p>
     );
   }
 
-  return <p className="text-sm text-muted">{project.completedLabel}</p>;
+  return <p className="small-label">{project.completedLabel}</p>;
 }

@@ -82,7 +82,7 @@ function WaitingRoomArt({ art }: { art: WaitingRoomIllustration }) {
               <span className={isNext ? "text-text" : "text-text-soft"}>{row.label}</span>
               <span
                 className={`shrink-0 rounded-full px-2.5 py-0.5 text-xs font-medium ${
-                  isNext ? "bg-live/15 text-live" : "bg-card-hover text-muted"
+                  isNext ? "bg-accent/15 text-accent" : "bg-card-hover text-muted"
                 }`}
               >
                 {row.position}

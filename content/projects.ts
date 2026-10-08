@@ -40,6 +40,7 @@ export type ProjectIllustration =
 
 type ProjectBase = {
   name: string;
+  tags?: string[]; // small stack tags on the front, under the summary
   illustration: ProjectIllustration;
   summary: string;
   details: ProjectDetails;
@@ -65,6 +66,7 @@ export const projectLabels = {
 
 const docSearch: Project = {
   name: "DocSearch",
+  tags: ["Next.js", "FastAPI", "PostgreSQL", "pgvector"],
   status: "in-progress",
   // TODO: add startedOn ("YYYY-MM-DD") to show the day counter
   illustration: {

@@ -1,5 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { Section } from "@/components/ui/section";
+import { StyledText } from "@/components/ui/styled-text";
 import { education, educationLabel, profile } from "@/content/profile";
 
 export function About() {
@@ -10,7 +11,7 @@ export function About() {
             the paragraphs the right 7/12. */}
         <div className="grid gap-6 sm:gap-8 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-16">
           <p className="text-[1.375rem] font-semibold leading-snug tracking-tight sm:text-[1.625rem] lg:text-[1.875rem]">
-            {profile.aboutStatement}
+            <StyledText value={profile.aboutStatement} />
           </p>
 
           <div className="max-w-[68ch] space-y-4 font-serif text-[1.0625rem] leading-relaxed text-text-soft sm:text-lg">
@@ -21,7 +22,7 @@ export function About() {
         </div>
 
         <div className="mt-8 border-t border-border pt-6 sm:mt-10 sm:pt-8">
-          <h3 className="text-xs font-semibold text-faint">
+          <h3 className="small-label">
             {educationLabel}
           </h3>
           {education.map((entry) => (

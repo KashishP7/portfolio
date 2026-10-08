@@ -1,3 +1,5 @@
+import type { RichText } from "./rich-text";
+
 export type Link = {
   kind: "email" | "linkedin" | "github"; // lets a component choose the right icon
   label: string; // visible text, e.g. "GitHub"
@@ -18,8 +20,8 @@ export type Profile = {
   roles: string[]; // cycled in the hero; the first is the stable label for screen readers
   location: string;
   availability: string;
-  tagline: string; // the one-line intro in the hero
-  aboutStatement: string;
+  tagline: RichText; // the one-line intro in the hero
+  aboutStatement: RichText;
   aboutParagraphs: string[];
   email: string;
   links: Link[];
@@ -35,10 +37,17 @@ export const profile: Profile = {
   ],
   location: "Toronto, Canada",
   availability: "Open to software engineering roles",
-  tagline:
-    "I build apps for people: software that solves real problems, from the interface to the systems behind it.",
-  aboutStatement:
-    "I love building apps for people. Give me a real problem and I'll turn it into a product that makes someone's work easier.",
+  tagline: [
+    { text: "I build apps for people: software that " },
+    { text: "solves real problems", style: "accent" },
+    { text: ", from the interface to the systems behind it." },
+  ],
+  aboutStatement: [
+    { text: "I love building apps for people. Give me a " },
+    { text: "real problem", style: "accent" },
+    { text: " and I'll turn it into a product that makes " },
+    { text: "someone's work easier.", style: "accent-italic" },
+  ],
   aboutParagraphs: [
     "I'm a full-stack developer based in Toronto. I studied Computer Science at Brock University, and I've worked on software in two very different settings: building client websites in Ahmedabad, India, and shipping features remotely with a team in Australia.",
     "What I enjoy most is the whole life of a product: understanding the problem, designing something people actually want to use, and building the systems that make it work. I care about clean, maintainable code and software that feels fast.",
@@ -67,6 +76,15 @@ export const profile: Profile = {
     },
   ],
 };
+
+// The three-column strip above the hero nav. `live` adds the green dot.
+export type HeroDetail = { label: string; value: string; live?: boolean };
+
+export const heroDetails: HeroDetail[] = [
+  { label: "Based in", value: "Toronto, Canada" },
+  { label: "Focus", value: "Web, SaaS and AI products" },
+  { label: "Currently", value: "Building DocSearch", live: true },
+];
 
 // Small heading above the education entry in the About card.
 export const educationLabel = "Education";
