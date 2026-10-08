@@ -127,7 +127,7 @@ function FlipCorner({ text, label, onClick, ref }: FlipCornerProps) {
       {/* Grows from 56px to 64px on hover, like the page lifting a little. */}
       <span
         aria-hidden="true"
-        className="absolute right-0 bottom-0 size-14 rounded-tl-xl transition-[width,height] duration-200 group-hover:size-16"
+        className="absolute right-0 bottom-0 size-14 rounded-tl-xl transition-[width,height] duration-200 group-hover:size-16 motion-reduce:transition-none"
         style={{ background: foldBackground }}
       />
     </button>
