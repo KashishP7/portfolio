@@ -57,8 +57,10 @@ export type Project =
 // Small labels used on the project cards.
 export const projectLabels = {
   currentlyBuilding: "Currently building",
-  flip: "Flip for details", // text beside the folded corner
-  back: "Back",
+  flip: "Flip for details", // corner text on the front
+  flipBack: "Flip back", // corner text on the back
+  keyFeatures: "Key features",
+  builtWith: "Built with",
 };
 
 const docSearch: Project = {
