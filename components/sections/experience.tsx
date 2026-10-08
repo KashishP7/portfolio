@@ -1,4 +1,5 @@
 import { Section } from "@/components/ui/section";
+import { TagList } from "@/components/ui/tag-list";
 import { experience } from "@/content/experience";
 
 export function Experience() {
@@ -25,6 +26,7 @@ export function Experience() {
                   {job.start} – {job.end}
                 </p>
                 <p className="mt-1 text-sm text-muted">{job.location}</p>
+                <TagList tags={job.tags} className="mt-4" />
               </div>
 
               <ol className="space-y-4">

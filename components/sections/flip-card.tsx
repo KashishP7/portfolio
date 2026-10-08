@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { flushSync } from "react-dom";
+import { moveFocus } from "@/lib/focus";
 
 type FlipCardProps = {
   front: React.ReactNode; // rendered on the server and passed in
@@ -61,17 +62,20 @@ export function FlipCard({
 
   useEffect(() => () => cancelAnimationFrame(tiltFrame.current), []);
 
-  function flip(toBack: boolean) {
+  function flip(toBack: boolean, fromKeyboard: boolean) {
     // flushSync applies the new state right away, so the side we're turning
     // to is no longer inert (an inert button can't take focus). Then focus
-    // its corner button.
+    // its corner button; the ring only shows after a keyboard flip.
     flushSync(() => setFlipped(toBack));
-    (toBack ? backButton : frontButton).current?.focus();
+    moveFocus((toBack ? backButton : frontButton).current, fromKeyboard);
   }
+
+  // A click from Enter/Space has detail 0; a mouse click has its click count.
+  const fromKeyboard = (event: React.MouseEvent) => event.detail === 0;
 
   function handleKeyDown(event: React.KeyboardEvent) {
     if (event.key === "Escape" && flipped) {
-      flip(false);
+      flip(false, true);
     }
   }
 
@@ -109,7 +113,7 @@ export function FlipCard({
             ref={frontButton}
             text={flipLabel}
             label={`${flipLabel}: ${projectName}`}
-            onClick={() => flip(true)}
+            onClick={(event) => flip(true, fromKeyboard(event))}
           />
         </div>
 
@@ -124,7 +128,7 @@ export function FlipCard({
             ref={backButton}
             text={flipBackLabel}
             label={`${flipBackLabel}: ${projectName}`}
-            onClick={() => flip(false)}
+            onClick={(event) => flip(false, fromKeyboard(event))}
           />
         </div>
       </div>
@@ -141,7 +145,7 @@ const foldBackground =
 type FlipCornerProps = {
   text: string;
   label: string; // visible text plus the project name, for screen readers
-  onClick: () => void;
+  onClick: (event: React.MouseEvent) => void;
   ref: React.Ref<HTMLButtonElement>;
 };
 

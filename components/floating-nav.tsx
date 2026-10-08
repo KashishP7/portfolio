@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { moveFocus } from "@/lib/focus";
 
 type FloatingNavProps = {
   items: { label: string; target: string }[]; // the full list of links
@@ -9,7 +10,9 @@ type FloatingNavProps = {
   hint: string; // added to the button's label, e.g. "show all sections"
 };
 
-type FocusTarget = "row" | "button" | null;
+// Where focus goes after opening/closing, and whether a keyboard did it
+// (the focus ring only shows then).
+type FocusTarget = { to: "row" | "button"; keyboard: boolean } | null;
 
 // A small pill fixed at the bottom of the screen. It appears once the
 // hero's own nav has scrolled out of view and shows the current section
@@ -73,7 +76,7 @@ export function FloatingNav({ items, sections, label, hint }: FloatingNavProps) 
     }
     function handleKeyDown(event: KeyboardEvent) {
       if (event.key === "Escape") {
-        focusAfter.current = "button";
+        focusAfter.current = { to: "button", keyboard: true };
         setOpen(false);
       }
     }
@@ -88,12 +91,13 @@ export function FloatingNav({ items, sections, label, hint }: FloatingNavProps) 
   // After opening or closing, move focus (the row is inert until it opens,
   // so this has to wait for the render).
   useLayoutEffect(() => {
-    if (focusAfter.current === "row") {
-      rowRef.current?.querySelector<HTMLElement>("a")?.focus();
-    } else if (focusAfter.current === "button") {
-      buttonRef.current?.focus();
-    }
+    const target = focusAfter.current;
     focusAfter.current = null;
+    if (target?.to === "row") {
+      moveFocus(rowRef.current?.querySelector<HTMLElement>("a") ?? null, target.keyboard);
+    } else if (target?.to === "button") {
+      moveFocus(buttonRef.current, target.keyboard);
+    }
   }, [open]);
 
   // Scroll to the section ourselves rather than relying on the link's
@@ -162,7 +166,10 @@ export function FloatingNav({ items, sections, label, hint }: FloatingNavProps) 
           aria-expanded={open}
           aria-controls="floating-nav-links"
           aria-label={`${currentName}, ${hint}`}
-          onClick={() => changeOpen(!open, open ? null : "row")}
+          // A click from Enter/Space has detail 0; a mouse click doesn't.
+          onClick={(event) =>
+            changeOpen(!open, open ? null : { to: "row", keyboard: event.detail === 0 })
+          }
           className="pointer-events-auto flex min-h-11 items-center gap-3 rounded-full border border-border bg-card/90 px-4 text-xs font-medium text-text backdrop-blur-md hover:bg-(--nav-hover) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent sm:text-sm"
         >
           {currentName}
@@ -171,7 +178,7 @@ export function FloatingNav({ items, sections, label, hint }: FloatingNavProps) 
               <span
                 key={section.id}
                 className={`size-1.5 rounded-full transition-colors ${
-                  section.id === current ? "bg-text" : "bg-faint"
+                  section.id === current ? "bg-accent" : "bg-faint"
                 }`}
               />
             ))}

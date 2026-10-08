@@ -5,6 +5,7 @@ export type Experience = {
   start: string;
   end: string;
   highlights: string[]; // four numbered points
+  tags: string[]; // small tool tags under the role details
 };
 
 // Newest first.
@@ -21,6 +22,7 @@ export const experience: Experience[] = [
       "Wrote technical documentation that supported testing, deployment and future development.",
       "Worked in an agile Scrum team, assessing needs and building solutions aligned with technical and business goals.",
     ],
+    tags: ["Git", "Jira", "Agile / Scrum", "Debugging", "Technical documentation"],
   },
   {
     role: "Web Developer Intern",
@@ -34,5 +36,6 @@ export const experience: Experience[] = [
       "Ran cross-browser testing and fixed the UI and performance issues it uncovered.",
       "Maintained site content for usability and accessibility, and delivered projects on deadline.",
     ],
+    tags: ["HTML", "CSS", "JavaScript", "REST APIs", "Cross-browser testing"],
   },
 ];

@@ -21,7 +21,8 @@ export function Illustration({ illustration }: { illustration: ProjectIllustrati
   }
 }
 
-// Shared frame. aria-hidden: the drawing is a visual example, and the card's
+// Shared frame, the same minimum height for every project so the panels
+// line up side by side (content is centered inside). aria-hidden: the drawing is a visual example, and the card's
 // summary already describes the product for screen readers. data-loop lets
 // LoopPlayer pause the animations while the card is off screen.
 function Panel({ children }: { children: React.ReactNode }) {
@@ -29,7 +30,7 @@ function Panel({ children }: { children: React.ReactNode }) {
     <div
       aria-hidden="true"
       data-loop
-      className="flex min-h-52 flex-col justify-center rounded-2xl border border-border bg-inset p-4 text-sm sm:p-6"
+      className="flex min-h-64 flex-col justify-center rounded-2xl border border-border bg-inset p-4 text-sm sm:p-6"
     >
       {children}
     </div>

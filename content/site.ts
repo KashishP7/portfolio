@@ -23,9 +23,9 @@ export type NavItem = {
 export const navItems: NavItem[] = [
   { label: "Home", target: "home" },
   { label: "About", target: "about" },
-  { label: "Experience", target: "experience" },
-  { label: "Toolkit", target: "toolkit" },
   { label: "Projects", target: "projects" },
+  { label: "Toolkit", target: "toolkit" },
+  { label: "Experience", target: "experience" },
   { label: "Contact", target: "contact" },
 ];
 
@@ -33,9 +33,9 @@ export const navItems: NavItem[] = [
 // The floating nav shows one dot per section.
 export const sectionOrder: Exclude<SectionId, "home">[] = [
   "about",
-  "experience",
-  "toolkit",
   "projects",
+  "toolkit",
+  "experience",
   "contact",
 ];
 
@@ -60,7 +60,6 @@ export const skipLink = {
 export const footer = {
   // Under the large name; joined with an accent " / ".
   descriptor: ["Toronto, Canada", "Web, SaaS and AI"],
-  indexLabel: "Index",
   colophonLabel: "Colophon",
   colophon:
     "Built with Next.js, TypeScript and Tailwind CSS. Set in Archivo and Newsreader. Deployed on Vercel.",
