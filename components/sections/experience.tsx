@@ -21,10 +21,10 @@ export function Experience() {
                   {job.company}
                 </h3>
                 <p className="mt-1 text-text-soft">{job.role}</p>
-                <p className="mt-3 text-sm text-muted tabular-nums">
+                <p className="small-label mt-3 tabular-nums">
                   {job.start} – {job.end}
                 </p>
-                <p className="text-sm text-muted">{job.location}</p>
+                <p className="mt-1 text-sm text-muted">{job.location}</p>
               </div>
 
               <ol className="space-y-4">
@@ -34,7 +34,7 @@ export function Experience() {
                         visible "01" is hidden from them. */}
                     <span
                       aria-hidden="true"
-                      className="pt-1 text-sm font-medium text-faint tabular-nums"
+                      className="pt-1 text-sm font-medium text-accent tabular-nums"
                     >
                       {String(index + 1).padStart(2, "0")}
                     </span>

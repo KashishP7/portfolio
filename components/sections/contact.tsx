@@ -12,7 +12,10 @@ export function Contact() {
         <div className="grid gap-10 lg:grid-cols-2 lg:gap-16">
           <div>
             <h3 className="text-3xl font-bold font-stretch-semi-expanded tracking-tight sm:text-4xl lg:text-5xl">
-              {contact.heading}
+              {contact.heading.first}
+              <span className="block font-serif font-normal italic text-accent">
+                {contact.heading.second}
+              </span>
             </h3>
             <p className="mt-4 max-w-md font-serif text-lg leading-relaxed text-text-soft sm:text-xl">
               {contact.line}

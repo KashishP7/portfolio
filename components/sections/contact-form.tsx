@@ -50,7 +50,7 @@ export function ContactForm() {
 
       <button
         type="button"
-        className="mt-2 self-start rounded-full bg-text px-6 py-3 font-semibold text-bg transition-colors hover:bg-text-soft focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+        className="mt-2 self-start rounded-full bg-accent px-6 py-3 font-semibold text-bg transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
       >
         {form.submit}
       </button>

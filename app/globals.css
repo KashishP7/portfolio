@@ -19,8 +19,9 @@
   --faint: #5c636b;
 
   /* Highlights */
-  --accent: #7cc4ff;
-  --live: #4ade80;
+  --accent: #e0525e; /* soft crimson */
+  --live: #4ade80; /* only for live signals: availability, currently building, success */
+  --tag-border: #262d36; /* outlined tags */
 
   /* Interaction effects */
   --nav-hover: #232a33; /* nav link background on hover */
@@ -53,6 +54,18 @@
      Archivo is the default; reading text uses the font-serif class. */
   --font-sans: var(--font-archivo);
   --font-serif: var(--font-newsreader);
+}
+
+/* Small labels, reused everywhere (hero strip, dates, status lines,
+   footer): 12px, uppercase, letter-spaced, medium weight, muted. Used as
+   the class "small-label". */
+@utility small-label {
+  font-size: 0.75rem;
+  line-height: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-weight: 500;
+  color: var(--muted);
 }
 
 body {

@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Archivo, Newsreader } from "next/font/google";
 import { profile } from "@/content/profile";
+import { plainText } from "@/content/rich-text";
 import "./globals.css";
 
 // Headings, names, labels and UI. Omitting `weight` loads the variable font,
@@ -21,7 +22,7 @@ const newsreader = Newsreader({
 
 export const metadata: Metadata = {
   title: profile.name,
-  description: profile.tagline,
+  description: plainText(profile.tagline),
 };
 
 // "cover" makes env(safe-area-inset-*) report the iPhone's real insets, so

@@ -2,7 +2,8 @@ import { BottomNav } from "@/components/bottom-nav";
 import { HeroDots } from "@/components/effects/hero-dots";
 import { RoleCycler } from "@/components/effects/role-cycler";
 import { Container } from "@/components/ui/container";
-import { profile } from "@/content/profile";
+import { StyledText } from "@/components/ui/styled-text";
+import { heroDetails, profile } from "@/content/profile";
 import { TorontoTime } from "./toronto-time";
 
 const LETTER_STAGGER = 35; // ms between letters of the name
@@ -72,9 +73,33 @@ export function Hero() {
             className="hero-fade mt-4 max-w-xl font-serif text-lg text-muted sm:text-xl"
             style={{ animationDelay: "1200ms" }}
           >
-            {profile.tagline}
+            <StyledText value={profile.tagline} />
           </p>
         </div>
+
+        {/* Detail strip: a thin line, then three columns (left, center,
+            right) on wide screens, stacked on phones. */}
+        <dl data-dim className="mb-6 grid gap-5 border-t border-border pt-6 sm:mb-8 sm:grid-cols-3">
+          {heroDetails.map((detail, index) => {
+            const align =
+              index === 0
+                ? ""
+                : index === heroDetails.length - 1
+                  ? "sm:items-end sm:text-right"
+                  : "sm:items-center sm:text-center";
+            return (
+              <div key={detail.label} className={`flex flex-col ${align}`}>
+                <dt className="small-label">{detail.label}</dt>
+                <dd className="mt-1.5 flex items-center gap-2 text-sm text-text-soft">
+                  {detail.live && (
+                    <span className="size-2 rounded-full bg-live" aria-hidden="true" />
+                  )}
+                  {detail.value}
+                </dd>
+              </div>
+            );
+          })}
+        </dl>
 
         <BottomNav />
       </Container>

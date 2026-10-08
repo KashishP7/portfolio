@@ -39,6 +39,12 @@ export const sectionOrder: Exclude<SectionId, "home">[] = [
   "contact",
 ];
 
+// "01", "02", ... from the page order; used by the section headings and
+// the footer index.
+export function sectionNumber(id: Exclude<SectionId, "home">): string {
+  return String(sectionOrder.indexOf(id) + 1).padStart(2, "0");
+}
+
 // The small pill that appears once the hero's nav has scrolled away.
 export const floatingNav = {
   label: "Sections", // names the <nav> for screen readers
@@ -52,5 +58,14 @@ export const skipLink = {
 };
 
 export const footer = {
-  credit: "Kashish Patel, Toronto",
+  // Under the large name; joined with an accent " / ".
+  descriptor: ["Toronto, Canada", "Web, SaaS and AI"],
+  indexLabel: "Index",
+  colophonLabel: "Colophon",
+  colophon:
+    "Built with Next.js, TypeScript and Tailwind CSS. Set in Archivo and Newsreader. Deployed on Vercel.",
+  colophonTags: ["Next.js", "TypeScript", "Tailwind"], // shown uppercase
+  copyright: "© 2026 Kashish Patel",
+  madeIn: "Made in Toronto",
+  backToTop: "Back to top ↑",
 };
