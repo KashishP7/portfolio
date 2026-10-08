@@ -277,15 +277,17 @@ html[data-reveal] [data-reveal]:not([data-revealed]) {
    PNGs in 1x and 2x (Safari doesn't reliably support SVG cursors); the
    SVG sources sit next to them in public/cursors. The numbers after each
    image are the hotspot in 1x pixels. Each declaration ends with a
-   built-in fallback (auto / pointer), and a browser that doesn't
-   understand image-set() keeps the plain url() line above it. */
+   built-in fallback (auto / pointer). -webkit-image-set() picks the 2x
+   image on Retina screens in both Chrome and Safari; a browser that
+   doesn't understand it keeps the plain url() line above it. The
+   unprefixed image-set() is left out on purpose: browsers that parse it
+   for cursors but can't draw it fall back to the system cursor. */
 @media (hover: hover) and (pointer: fine) {
   /* Set on both html and body so every element inherits it. */
   html,
   body {
     cursor: url("/cursors/arrow.png") 3 3, auto;
     cursor: -webkit-image-set(url("/cursors/arrow.png") 1x, url("/cursors/arrow@2x.png") 2x) 3 3, auto;
-    cursor: image-set(url("/cursors/arrow.png") 1x, url("/cursors/arrow@2x.png") 2x) 3 3, auto;
   }
 
   a[href],
@@ -293,13 +295,19 @@ html[data-reveal] [data-reveal]:not([data-revealed]) {
   label[for] {
     cursor: url("/cursors/hand.png") 10 3, pointer;
     cursor: -webkit-image-set(url("/cursors/hand.png") 1x, url("/cursors/hand@2x.png") 2x) 10 3, pointer;
-    cursor: image-set(url("/cursors/hand.png") 1x, url("/cursors/hand@2x.png") 2x) 10 3, pointer;
   }
 
   input,
   textarea {
     cursor: text;
   }
+}
+
+/* Focus moved by code after a mouse action (e.g. a flip): no focus ring.
+   See lib/focus.ts; the mark is removed as soon as the element loses focus
+   or the visitor uses the keyboard on it. */
+[data-quiet-focus]:focus-visible {
+  outline: none;
 }
 
 /* Reduced motion: the dots near the cursor appear without fading in. */

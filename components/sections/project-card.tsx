@@ -1,4 +1,5 @@
 import { Card } from "@/components/ui/card";
+import { TagList } from "@/components/ui/tag-list";
 import { projectLabels, type Project } from "@/content/projects";
 import { FlipCard } from "./flip-card";
 import { Illustration } from "./project-illustration";
@@ -27,11 +28,15 @@ export function ProjectCard({ project, featured = false }: ProjectCardProps) {
 function ProjectFront({ project, featured }: Required<ProjectCardProps>) {
   return (
     <Card className="flex h-full flex-col">
+      {/* The back usually needs more height, which sets the card's size.
+          So the front fills it: the wide card centers its content; the two
+          side-by-side cards keep the illustration at the top (lined up
+          with each other) and the text at the bottom. */}
       <div
         className={
           featured
-            ? "grid gap-8 lg:grid-cols-2 lg:items-center lg:gap-12"
-            : "flex flex-col gap-8"
+            ? "grid flex-1 content-center gap-8 lg:grid-cols-2 lg:items-center lg:gap-12"
+            : "flex flex-1 flex-col justify-between gap-8"
         }
       >
         {/* First in the markup so it sits on top on phones; on wide screens
@@ -48,18 +53,7 @@ function ProjectFront({ project, featured }: Required<ProjectCardProps>) {
           <p className="mt-3 font-serif text-lg leading-relaxed text-text-soft">
             {project.summary}
           </p>
-          {project.tags && (
-            <ul className="mt-4 flex flex-wrap gap-2">
-              {project.tags.map((tag) => (
-                <li
-                  key={tag}
-                  className="flex h-7 items-center rounded-lg border border-(--tag-border) px-2.5 text-[13px] text-muted"
-                >
-                  {tag}
-                </li>
-              ))}
-            </ul>
-          )}
+          {project.tags && <TagList tags={project.tags} className="mt-4" />}
         </div>
       </div>
 

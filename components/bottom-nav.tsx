@@ -1,6 +1,8 @@
 import { navItems } from "@/content/site";
 
-// Sits at the bottom of the hero and scrolls away with the page.
+// Sits at the bottom of the hero and scrolls away with the page. While it's
+// visible you're in the hero, so "Home" is the active link: aria-current
+// plus a 2px accent underline.
 export function BottomNav() {
   return (
     <nav className="flex justify-center">
@@ -11,8 +13,9 @@ export function BottomNav() {
           <li key={item.target}>
             <a
               href={`#${item.target}`}
+              aria-current={item.target === "home" ? "location" : undefined}
               data-spotlight
-              className="block rounded-xl px-2 py-2 text-center text-xs font-medium text-muted hover:text-text focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent sm:px-4 sm:text-sm"
+              className="relative block rounded-xl px-2 py-2 aria-[current]:text-text aria-[current]:after:absolute aria-[current]:after:inset-x-1/3 aria-[current]:after:bottom-1 aria-[current]:after:h-0.5 aria-[current]:after:rounded-full aria-[current]:after:bg-accent text-center text-xs font-medium text-muted hover:text-text focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent sm:px-4 sm:text-sm"
             >
               {item.label}
             </a>
