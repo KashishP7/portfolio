@@ -14,8 +14,8 @@ type CardProps = {
   external?: boolean; // open the link in a new tab
 };
 
-// Every card on the site uses this, so shared card behaviour (like the
-// spotlight in M6) can be added in one place.
+// Every card on the site uses this. data-spotlight opts it into the
+// spotlight effect (hover/focus styles are in globals.css).
 export function Card({
   children,
   className = "",
@@ -32,12 +32,17 @@ export function Card({
         target={external ? "_blank" : undefined}
         // noopener noreferrer: the new tab gets no access back to this page.
         rel={external ? "noopener noreferrer" : undefined}
-        className={`${classes} block transition-colors hover:border-border-hover hover:bg-card-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent`}
+        data-spotlight
+        className={`${classes} block focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent`}
       >
         {children}
       </a>
     );
   }
 
-  return <div className={classes}>{children}</div>;
+  return (
+    <div data-spotlight className={classes}>
+      {children}
+    </div>
+  );
 }
