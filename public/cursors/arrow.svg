@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+  <!-- Source for arrow.png / arrow@2x.png. Tail-less arrowhead pointing
+       up-left with a notch in its bottom edge, solid white with a thin dark
+       edge. Hotspot (the tip): 3 3. -->
+  <path d="M3 3 L20.5 9.4 L12.4 12.4 L9.4 20.5 Z"
+        fill="none" stroke="rgba(0,0,0,0.5)" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M3 3 L20.5 9.4 L12.4 12.4 L9.4 20.5 Z" fill="#fff"/>
+</svg>

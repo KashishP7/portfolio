@@ -28,6 +28,12 @@ export const navItems: NavItem[] = [
   { label: "Contact", target: "contact" },
 ];
 
+// First Tab stop on the page, hidden until focused. Jumps past the nav.
+export const skipLink = {
+  label: "Skip to content",
+  target: "about" satisfies SectionId,
+};
+
 export const footer = {
   credit: "Kashish Patel, Toronto",
 };
