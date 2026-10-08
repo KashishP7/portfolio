@@ -1,4 +1,5 @@
 import { FloatingNav } from "@/components/floating-nav";
+import { LoopPlayer } from "@/components/effects/loop-player";
 import { PointerTracker } from "@/components/effects/pointer-tracker";
 import { ScrollReveal } from "@/components/effects/scroll-reveal";
 import { ScrollSpotlight } from "@/components/effects/scroll-spotlight";
@@ -35,6 +36,7 @@ export default function Home() {
       <PointerTracker />
       <ScrollSpotlight />
       <ScrollReveal />
+      <LoopPlayer />
     </>
   );
 }

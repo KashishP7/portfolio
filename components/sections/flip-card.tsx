@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { flushSync } from "react-dom";
 
 type FlipCardProps = {
@@ -19,6 +19,8 @@ const faceStyle = {
   WebkitBackfaceVisibility: "hidden",
 } as const;
 
+const MAX_TILT = 5; // degrees, at the card's edges
+
 export function FlipCard({
   front,
   back,
@@ -30,6 +32,34 @@ export function FlipCard({
   const [flipped, setFlipped] = useState(false);
   const frontButton = useRef<HTMLButtonElement>(null);
   const backButton = useRef<HTMLButtonElement>(null);
+  const outer = useRef<HTMLDivElement>(null);
+  const tiltFrame = useRef(0);
+
+  // Tilt toward the mouse: write --tilt-x / --tilt-y on the outer wrapper,
+  // at most once per frame, without re-rendering. The CSS (.tilt in
+  // globals.css) only applies them for a mouse and without reduced motion.
+  function handlePointerMove(event: React.PointerEvent) {
+    if (event.pointerType !== "mouse") return;
+    const { clientX, clientY } = event;
+    cancelAnimationFrame(tiltFrame.current);
+    tiltFrame.current = requestAnimationFrame(() => {
+      const element = outer.current;
+      if (!element) return;
+      const box = element.getBoundingClientRect();
+      const x = (clientX - box.left) / box.width - 0.5; // -0.5 (left) to 0.5 (right)
+      const y = (clientY - box.top) / box.height - 0.5; // -0.5 (top) to 0.5 (bottom)
+      element.style.setProperty("--tilt-y", `${(x * 2 * MAX_TILT).toFixed(2)}deg`);
+      element.style.setProperty("--tilt-x", `${(-y * 2 * MAX_TILT).toFixed(2)}deg`);
+    });
+  }
+
+  function handlePointerLeave() {
+    cancelAnimationFrame(tiltFrame.current);
+    outer.current?.style.setProperty("--tilt-x", "0deg");
+    outer.current?.style.setProperty("--tilt-y", "0deg");
+  }
+
+  useEffect(() => () => cancelAnimationFrame(tiltFrame.current), []);
 
   function flip(toBack: boolean) {
     // flushSync applies the new state right away, so the side we're turning
@@ -51,11 +81,16 @@ export function FlipCard({
   const hidden = "pointer-events-none motion-reduce:opacity-0";
 
   return (
+    // The outer wrapper tilts; the rotor inside flips. Keeping them on
+    // separate elements means the two transforms never interfere.
     <div
+      ref={outer}
       role="group"
       aria-label={projectName}
       onKeyDown={handleKeyDown}
-      className={`perspective-[1600px] ${className}`}
+      onPointerMove={handlePointerMove}
+      onPointerLeave={handlePointerLeave}
+      className={`tilt perspective-[1600px] ${className}`}
     >
       {/* Both faces share one grid cell, so the card is always as tall as
           the taller side. This "rotor" is what turns. */}

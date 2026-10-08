@@ -24,13 +24,16 @@ export type DocSearchIllustration = {
 export type ConnectXIllustration = {
   kind: "connectx";
   comment: string;
+  keyword: string; // the dashed "matched" chip
   reply: string;
   caption: string;
 };
 
 export type WaitingRoomIllustration = {
   kind: "waiting-room";
-  queue: { label: string; position: string }[]; // first row is next
+  waiting: [string, string]; // the two patients already in the queue
+  arrival: string; // the urgent patient who moves to the front
+  positions: [string, string, string]; // fixed labels on the right
 };
 
 export type ProjectIllustration =
@@ -116,9 +119,10 @@ const connectX: Project = {
   completedLabel: "Shipped April 2025",
   illustration: {
     kind: "connectx",
-    comment: 'A follower comments "price?" on a post',
-    reply: "Automatic DM: here's our pricing page",
-    caption: "Keyword matched, reply sent in seconds",
+    comment: '@maya commented "price?"',
+    keyword: "Keyword matched: price",
+    reply: "DM sent: here's our pricing page",
+    caption: "Replied in 2 seconds",
   },
   summary:
     "A social media automation platform that runs keyword-based workflows for Instagram comments and DMs.",
@@ -157,11 +161,9 @@ const waitingRoom: Project = {
   completedLabel: "Built February 2024",
   illustration: {
     kind: "waiting-room",
-    queue: [
-      { label: "Urgent", position: "Next" },
-      { label: "Standard, arrived 9:10", position: "2nd" },
-      { label: "Standard, arrived 9:25", position: "3rd" },
-    ],
+    waiting: ["Standard, arrived 9:10", "Standard, arrived 9:25"],
+    arrival: "Urgent, just arrived",
+    positions: ["Next", "2nd", "3rd"],
   },
   summary:
     "A Java system for clinic appointments that orders patients fairly with a priority queue and saves state between sessions.",
