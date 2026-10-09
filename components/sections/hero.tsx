@@ -6,7 +6,7 @@ import { StyledText } from "@/components/ui/styled-text";
 import { heroDetails, profile } from "@/content/profile";
 import { TorontoTime } from "./toronto-time";
 
-const LETTER_STAGGER = 35; // ms between letters of the name
+const LETTER_STAGGER = 50; // ms between letters of the name
 
 export function Hero() {
   const words = profile.name.split(" ");
@@ -19,7 +19,9 @@ export function Hero() {
     // grids don't stack up here.
     <section
       id="home"
-      className="relative isolate flex flex-col bg-bg pt-6 pb-4 sm:min-h-svh sm:pt-8 sm:pb-6"
+      // Space below the nav: 24px on phones, 40px from 640px, plus the
+      // iPhone home indicator.
+      className="relative isolate flex flex-col bg-bg pt-6 pb-[calc(1.5rem+env(safe-area-inset-bottom))] sm:min-h-svh sm:pt-8 sm:pb-[calc(2.5rem+env(safe-area-inset-bottom))]"
     >
       <HeroDots />
       <Container className="flex flex-1 flex-col">
@@ -38,11 +40,11 @@ export function Hero() {
         {/* Entrance (on load, and again when the hero returns after fully
             leaving the screen; off with reduced motion, see "Hero
             entrance" in globals.css): the name appears letter by letter,
-            the roles decode and cycle (RoleCycler), and on load the intro
-            and dots fade in. Screen readers get the real text right away
-            from the sr-only copies. */}
-        <div data-dim className="flex flex-col items-center pt-16 pb-12 text-center sm:flex-1 sm:justify-center sm:py-10">
-          <h1 className="text-[clamp(3.5rem,14vw,10.5rem)] leading-[0.9] font-extrabold font-stretch-semi-expanded tracking-tight">
+            then the role, intro and dots fade in; the roles roll every 3s
+            (RoleCycler). Screen readers get the real text right away from
+            the sr-only copies. */}
+        <div data-dim className="flex flex-col items-center pt-14 pb-10 text-center sm:flex-1 sm:justify-center sm:py-8">
+          <h1 className="text-[clamp(3rem,10vw,7.5rem)] leading-[0.9] font-extrabold font-stretch-semi-expanded tracking-tight">
             <span className="sr-only">{profile.name}</span>
             <span aria-hidden="true">
               {words.map((word, wordIndex) => {
@@ -64,14 +66,17 @@ export function Hero() {
               })}
             </span>
           </h1>
-          <p className="mt-8 text-lg font-medium text-text-soft sm:text-xl">
+          <p
+            className="hero-fade mt-6 text-lg font-medium text-text-soft sm:text-xl"
+            style={{ animationDelay: "600ms" }}
+          >
             {/* One stable label for screen readers; the cycling is visual. */}
             <span className="sr-only">{profile.roles[0]}</span>
             <RoleCycler roles={profile.roles} />
           </p>
           <p
-            className="hero-fade mt-4 max-w-xl font-serif text-lg text-muted sm:text-xl"
-            style={{ animationDelay: "1200ms" }}
+            className="hero-fade mt-3 max-w-xl font-serif text-lg text-muted sm:text-xl"
+            style={{ animationDelay: "900ms" }}
           >
             <StyledText value={profile.tagline} />
           </p>
