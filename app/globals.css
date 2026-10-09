@@ -195,8 +195,8 @@ html[data-touching] .hero-dots-lit {
 
 /* ------------------------------------------------------------------------
    Hero entrance (runs once on load). Name letters fade in from a blur one
-   after another (delays are set per letter in hero.tsx), the role decodes
-   (RoleCycler), then .hero-fade items fade in after their delay.
+   after another (delays are set per letter in hero.tsx), then .hero-fade
+   items (role, intro, dots) fade in after their delay.
    ------------------------------------------------------------------------ */
 @keyframes hero-letter {
   from {
@@ -211,26 +211,43 @@ html[data-touching] .hero-dots-lit {
   }
 }
 
-@keyframes appear {
-  to {
-    opacity: 1;
-  }
-}
-
 .hero-letter {
   display: inline-block; /* a filter animates reliably only on boxes */
-  animation: hero-letter 500ms cubic-bezier(0.2, 0.7, 0.2, 1) backwards;
+  animation: hero-letter 700ms cubic-bezier(0.2, 0.7, 0.2, 1) backwards;
 }
 
 .hero-fade {
   animation: fade-in 700ms ease backwards;
 }
 
-/* The role stays invisible until RoleCycler starts (it sets
-   data-decoding). If JavaScript never runs, it appears after 2.5s. */
-.decode:not([data-decoding]) {
+/* Role roll (RoleCycler). A one-line window clips the roles, which all
+   share one grid cell (so the window is as wide as the longest role).
+   current: in place. leaving: slides up and fades out. waiting: below and
+   hidden; it jumps there with no transition, since it's invisible. */
+.role-window {
+  display: inline-grid;
+  justify-items: center;
+  overflow: hidden;
+  vertical-align: bottom;
+}
+
+.role-word {
+  grid-area: 1 / 1;
+  white-space: nowrap;
+  transition:
+    translate 350ms cubic-bezier(0.2, 0.7, 0.2, 1),
+    opacity 350ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.role-word[data-state="leaving"] {
+  translate: 0 -100%;
   opacity: 0;
-  animation: appear 1ms 2.5s forwards;
+}
+
+.role-word[data-state="waiting"] {
+  translate: 0 100%;
+  opacity: 0;
+  transition: none;
 }
 
 /* ------------------------------------------------------------------------
@@ -263,9 +280,8 @@ html[data-reveal] [data-reveal]:not([data-revealed]) {
     animation: none;
   }
 
-  .decode:not([data-decoding]) {
-    opacity: 1;
-    animation: none;
+  .role-word {
+    transition: none;
   }
 
   [data-spotlight] {

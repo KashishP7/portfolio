@@ -2,72 +2,53 @@
 
 import { useEffect, useRef } from "react";
 
-const GLYPHS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#%&*+/<>";
-const ENTRANCE_DELAY = 300; // ms of scramble before the first role settles
-const SWITCH_DELAY = 250; // ms of scramble between roles
-const DECODE_TIME = 1000; // ms for a role to settle, left to right
-const HOLD_TIME = 3000; // ms each role stays readable
+const HOLD_TIME = 2400; // ms between rolls
 
-// Cycles through the roles with a decode effect: each one settles out of
-// scrambled characters, holds, then scrambles into the next. Purely visual
-// (aria-hidden); the hero gives screen readers the first role in an
-// sr-only copy. Writes the DOM text directly instead of setting React state.
+// Rolls through the roles like a word ticker: the current role slides up
+// and fades out while the next slides up into place from below. All roles
+// share one grid cell inside a one-line window that clips them, so the
+// window is as wide as the longest role and nothing shifts. The sliding is
+// CSS ("Role roll" in globals.css); this only switches data-state every
+// 2.4 seconds: "current", "leaving" (sliding out) or "waiting" (below, hidden).
+// Purely visual (aria-hidden); the hero gives screen readers the first role.
 //
 // It also watches the hero: when the hero leaves the screen completely the
-// cycle pauses, and when it comes back the entrance replays (the name's
-// letters and the first role's decode). Small scrolls that keep part of the
-// hero visible don't restart anything. Reduced motion: shows the first role
-// and does nothing else.
+// roll pauses, and when it comes back the entrance replays (the name's
+// letters, and the roll restarts from the first role). Small scrolls that
+// keep part of the hero visible don't restart anything. Reduced motion:
+// the first role stays put.
 export function RoleCycler({ roles }: { roles: string[] }) {
-  const ref = useRef<HTMLSpanElement>(null);
+  const windowRef = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
-    const found = ref.current;
-    if (!found || roles.length === 0) return;
+    const found = windowRef.current;
+    if (!found || roles.length < 2) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     // A new const with a non-null type, so the functions below (which
     // TypeScript treats as callable before the check) know it exists.
-    const element: HTMLSpanElement = found;
-    element.dataset.decoding = ""; // lets CSS show it (see .decode)
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const box: HTMLSpanElement = found;
+    const words = [...box.querySelectorAll<HTMLElement>("[data-state]")];
 
     let index = 0;
-    let frame = 0;
     let timer = 0;
 
-    // Settle `text` out of scrambled characters, then call `done`.
-    function decode(text: string, delay: number, done: () => void) {
-      let start = 0;
-      function tick(now: number) {
-        if (!start) start = now;
-        const progress = (now - start - delay) / DECODE_TIME;
-        if (progress >= 1) {
-          element.textContent = text;
-          done();
-          return;
-        }
-        const settled = Math.max(0, progress) * text.length;
-        element.textContent = [...text]
-          .map((char, i) =>
-            char === " " || i < settled ? char : GLYPHS[Math.floor(Math.random() * GLYPHS.length)],
-          )
-          .join("");
-        frame = requestAnimationFrame(tick);
-      }
-      frame = requestAnimationFrame(tick);
-    }
-
-    function showRole(delay: number) {
-      decode(roles[index], delay, () => {
-        timer = window.setTimeout(() => {
-          index = (index + 1) % roles.length;
-          showRole(SWITCH_DELAY);
-        }, HOLD_TIME);
+    function show(next: number) {
+      words.forEach((word, i) => {
+        if (i === next) word.dataset.state = "current";
+        else if (i === index) word.dataset.state = "leaving";
+        // Anything that left earlier jumps back below, unseen (no transition).
+        else word.dataset.state = "waiting";
       });
+      index = next;
     }
 
     function stop() {
-      cancelAnimationFrame(frame);
-      clearTimeout(timer);
+      clearInterval(timer);
+    }
+
+    function start() {
+      stop();
+      timer = window.setInterval(() => show((index + 1) % words.length), HOLD_TIME);
     }
 
     // Restart the CSS letter animations of the name (see .hero-letter).
@@ -81,7 +62,7 @@ export function RoleCycler({ roles }: { roles: string[] }) {
       for (const letter of letters) letter.style.animationName = "";
     }
 
-    const hero = element.closest("#home");
+    const hero = box.closest("#home");
     let hasLeft = false;
     let running = false;
 
@@ -89,34 +70,37 @@ export function RoleCycler({ roles }: { roles: string[] }) {
     const observer = new IntersectionObserver(([entry]) => {
       if (!entry.isIntersecting) {
         hasLeft = true;
-        if (running) stop();
         running = false;
+        stop();
         return;
       }
       if (running) return;
       running = true;
       if (hasLeft && hero) {
-        // Came back after leaving completely: replay the whole entrance.
+        // Came back after leaving completely: replay the entrance.
         replayName(hero);
         index = 0;
-        showRole(ENTRANCE_DELAY);
-      } else {
-        // First time on screen (page load).
-        showRole(ENTRANCE_DELAY);
+        words.forEach((word, i) => {
+          word.dataset.state = i === 0 ? "current" : "waiting";
+        });
       }
+      start();
     });
     if (hero) observer.observe(hero);
 
     return () => {
       observer.disconnect();
       stop();
-      element.textContent = roles[0];
     };
   }, [roles]);
 
   return (
-    <span ref={ref} aria-hidden="true" className="decode">
-      {roles[0]}
+    <span ref={windowRef} aria-hidden="true" className="role-window">
+      {roles.map((role, i) => (
+        <span key={role} data-state={i === 0 ? "current" : "waiting"} className="role-word">
+          {role}
+        </span>
+      ))}
     </span>
   );
 }

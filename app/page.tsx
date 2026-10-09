@@ -1,6 +1,7 @@
 import { FloatingNav } from "@/components/floating-nav";
 import { LoopPlayer } from "@/components/effects/loop-player";
 import { PointerTracker } from "@/components/effects/pointer-tracker";
+import { ScrollProgress } from "@/components/effects/scroll-progress";
 import { ScrollReveal } from "@/components/effects/scroll-reveal";
 import { ScrollSpotlight } from "@/components/effects/scroll-spotlight";
 import { SkipLink } from "@/components/skip-link";
@@ -17,6 +18,7 @@ export default function Home() {
   return (
     <>
       <SkipLink />
+      <ScrollProgress />
       {/* Section order matches sectionOrder in content/site.ts. */}
       <main>
         <Hero />

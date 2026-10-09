@@ -26,7 +26,7 @@ export function HeroDots() {
       aria-hidden="true"
       data-hero-dots
       className="hero-dots hero-fade pointer-events-none absolute inset-0 -z-10"
-      style={{ animationDelay: "1200ms" }}
+      style={{ animationDelay: "900ms" }}
     >
       <div
         className="absolute inset-0"
